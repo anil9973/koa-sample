@@ -1,3 +1,4 @@
+"use strict";
 const Koa = require("koa");
 const multer = require("@koa/multer");
 const { uploadBlob } = require("./config/azure");
