@@ -12,12 +12,12 @@ const multerMid = multer({
 	},
 });
 
-app.use((req, res, next) => {
-	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS, GET,  PUT, PATCH, DELETE");
-	res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization,token-type");
-	next();
-});
+// app.use((req, res, next) => {
+// 	res.setHeader("Access-Control-Allow-Origin", "*");
+// 	res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS, GET,  PUT, PATCH, DELETE");
+// 	res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization,token-type");
+// 	next();
+// });
 
 // app.use(helmet());
 
