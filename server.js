@@ -30,7 +30,7 @@ app.use(async (ctx, next) => {
 	if ("POST" != ctx.method) return await next();
 	const image = ctx.request.file;
 	const resizedImg = await sharp(image.buffer).webp({ quality: 80 }).toBuffer();
-	const imgUrl = await uploadBlob(resizedImg, "sand_dial.webp");
+	const imgUrl = await uploadBlob(resizedImg, image.originalname);
 	ctx.body = imgUrl;
 });
 
