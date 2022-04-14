@@ -4,7 +4,10 @@ const account = "ncert";
 const accountKey = "UXINqh6WVI1tPq+tmrIk2YxWrFxF4osS+wpCkeTJbCLQwf7BmEjKdsPbxZZlVkEK0w+bNM3oeKtHOoYQ5t+e/g==";
 
 const sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);
-const blobServiceClient = new BlobServiceClient(`https://${account}.blob.core.windows.net`, sharedKeyCredential);
+const blobServiceClient = new BlobServiceClient(
+	`https://${account}.blob.core.windows.net`,
+	sharedKeyCredential
+);
 
 const containerName = "reflect";
 const containerClient = blobServiceClient.getContainerClient(containerName);
@@ -14,10 +17,10 @@ const getBlobName = (originalName) => {
 	return `${identifier}_${originalName}`;
 };
 
-const uploadBlob = async (file) => {
-	const blobName = getBlobName(file.originalname);
+const uploadBlob = async (buffer, blobName) => {
+	// const blobName = file.originalname;
 	const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-	await blockBlobClient.uploadData(file.buffer);
+	await blockBlobClient.uploadData(buffer);
 	return blobName;
 };
 
