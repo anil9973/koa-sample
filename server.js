@@ -1,35 +1,48 @@
-"use strict";
-const Koa = require("koa");
-const multer = require("@koa/multer");
-const { uploadBlob } = require("./config/azure");
+import Koa from "koa";
+import multer from "@koa/multer";
+import { uploadBlob } from "./config/azure.js";
 
 const app = new Koa();
 
 const multerMid = multer({
-	storage: multer.memoryStorage(),
 	limits: {
 		fileSize: 1024 * 1024,
 	},
 });
 
-// app.use((req, res, next) => {
-// 	res.setHeader("Access-Control-Allow-Origin", "*");
-// 	res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS, GET,  PUT, PATCH, DELETE");
-// 	res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization,token-type");
-// 	next();
-// });
+app.use(async (ctx, next) => {
+	ctx.method != "POST" && ctx.throw(403, "forbidden request");
+	/* 	const token = ctx.cookies.get("TIDE");
+	token ?? ctx.throw(401, "Not Authenticated");
 
-// app.use(helmet());
+	let decodedToken;
 
-// app.use(hpp());
+	try {
+		decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+	} catch (error) {
+		error.statusCode = 500;
+		throw error;
+	}
+	if (!decodedToken) ctx.throw(401, "Not Authenticated"); */
+
+	await next();
+});
 
 app.use(multerMid.single("image"));
+const EXT_ID = "chrome-extension://pojmlllkhfjlhaagafkbfclmbhjknppp";
 
 app.use(async (ctx, next) => {
-	if ("POST" != ctx.method) return await next();
+	//check origin
+	const origin = ctx.headers.origin;
+	if (!origin || origin != EXT_ID) ctx.throw(403, "forbidden request");
+
+	//get image
 	const image = ctx.request.file;
+	if (!image) ctx.throw(400, "image required");
+
+	//upload image to azure
 	const imgUrl = await uploadBlob(image);
 	ctx.body = imgUrl;
 });
 
-app.listen(3000, () => console.log("node started"));
+app.listen(2000, () => console.log("node started"));
