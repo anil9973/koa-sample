@@ -7,4 +7,4 @@ app.use(async (ctx, next) => {
 	ctx.body = { pong: "it worked" };
 });
 
-app.listen(2000, () => console.log("node started"));
+app.listen(8080, () => console.log("node started"));
